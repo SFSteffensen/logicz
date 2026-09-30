@@ -1,0 +1,21 @@
+[package]
+name = "circuitz"
+version = "0.1.0"
+compiler = "0.14.0"
+entrypoint = "src/exports.typ"
+authors = ["Sebastian Steffensen"]
+license = "MIT"
+description = "Logic gate circuit diagrams from a tiny netlist language, drawn with CeTZ."
+categories = ["visualization", "components"]
+disciplines = ["computer-science", "engineering", "electrical-engineering"]
+keywords = [
+	"circuit",
+	"logic",
+	"gate",
+	"digital",
+	"schematic",
+	"boolean",
+	"IEEE 91",
+	"diagram",
+]
+exclude = ["docs/", "tests/", "justfile", ".gitignore"]
