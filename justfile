@@ -38,16 +38,20 @@ test-fail:
 docs:
     typst compile --root . docs/manual.typ docs/manual.pdf
 
+# live-preview
+docs-watch:
+    tinymist preview --root . --open docs/manual.typ
+
 # render the README images
 images:
     for f in docs/examples/*.typ; do typst compile --root . "$f" "${f%.typ}.png" --ppi 200; done
 
 # symlink this checkout as @local/circuitz:{{version}}
 install:
-    mkdir -p "{{local}}/circuitz"
-    ln -sfn "{{justfile_directory()}}" "{{local}}/circuitz/{{version}}"
-    @echo 'installed: #import "@local/circuitz:{{version}}": *'
+    mkdir -p "{{ local }}/circuitz"
+    ln -sfn "{{ justfile_directory() }}" "{{ local }}/circuitz/{{ version }}"
+    @echo 'installed: #import "@local/circuitz:{{ version }}": *'
 
 # remove the @local symlink
 uninstall:
-    rm -f "{{local}}/circuitz/{{version}}"
+    rm -f "{{ local }}/circuitz/{{ version }}"
