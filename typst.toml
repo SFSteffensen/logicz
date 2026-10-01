@@ -6,6 +6,7 @@ entrypoint = "src/exports.typ"
 authors = ["Sebastian Steffensen"]
 license = "MIT"
 description = "Logic gate circuit diagrams from a tiny netlist language, drawn with CeTZ."
+repository = "https://github.com/SFSteffensen/circuitz"
 categories = ["visualization", "components"]
 disciplines = ["computer-science", "engineering", "electrical-engineering"]
 keywords = [
