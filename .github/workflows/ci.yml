@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: test (typst ${{ matrix.typst }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # the minimum from typst.toml, and the newest release
+        typst: ["0.14.0", "latest"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: typst-community/setup-typst@v5
+        with:
+          typst-version: ${{ matrix.typst }}
+      - uses: extractions/setup-just@v4
+      - run: just test
+      - run: just docs
+      - run: just package
+      - name: Upload test renders
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-renders-${{ matrix.typst }}
+          path: tests/out/
+
+  # the single check that branch protection requires, so the matrix can
+  # change without touching the protection settings
+  ci-passed:
+    name: CI passed
+    if: always()
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - run: test "${{ needs.test.result }}" = success

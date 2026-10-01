@@ -1,0 +1,59 @@
+name: Release
+
+# Run by hand (Actions tab -> Release -> Run workflow) after bumping the
+# version in typst.toml and adding its section to CHANGELOG.md on main.
+on:
+  workflow_dispatch:
+    inputs:
+      draft:
+        description: "Create the release as a draft (review, then publish)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: typst-community/setup-typst@v5
+      - uses: extractions/setup-just@v4
+
+      - name: Read version
+        id: meta
+        run: |
+          version=$(grep '^version' typst.toml | cut -d '"' -f2)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+
+      - name: Check changelog
+        run: |
+          awk -v v="## ${{ steps.meta.outputs.version }}" '
+            $0 == v { on = 1; next } /^## / { on = 0 } on' CHANGELOG.md > notes.md
+          if ! grep -q '[^[:space:]]' notes.md; then
+            echo "::error::CHANGELOG.md has no '## ${{ steps.meta.outputs.version }}' section"
+            exit 1
+          fi
+
+      - run: just test
+      - run: just docs
+      - run: just package
+
+      - name: Create or update the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.meta.outputs.tag }}
+          VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          assets=(docs/manual.pdf "dist/circuitz-$VERSION.tar.gz")
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" "${assets[@]}" --clobber
+          else
+            draft=()
+            if [ "${{ inputs.draft }}" = true ]; then draft=(--draft); fi
+            gh release create "$TAG" "${assets[@]}" "${draft[@]}" \
+              --target "$GITHUB_SHA" --title "circuitz $VERSION" --notes-file notes.md
+          fi
