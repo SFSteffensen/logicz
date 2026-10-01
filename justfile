@@ -34,6 +34,16 @@ test-fail:
     done
     exit $fails
 
+# pack the files that ship (see `exclude` in typst.toml) into dist/
+package:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    dir="dist/circuitz-{{version}}"
+    rm -rf dist && mkdir -p "$dir"
+    cp -R typst.toml README.md LICENSE CHANGELOG.md src "$dir/"
+    tar -czf "dist/circuitz-{{version}}.tar.gz" -C dist "circuitz-{{version}}"
+    echo "packed dist/circuitz-{{version}}.tar.gz"
+
 # build the manual
 docs:
     typst compile --root . docs/manual.typ docs/manual.pdf
