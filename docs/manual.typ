@@ -152,7 +152,7 @@ out automatically; draw them by hand with `gate()` (@manual).
   `show-names`, `false`, [Print gate names above the gates (handy for `extra`).],
   `layering`, `"alap"`, [`"alap"`: gates as close to their consumers as possible, so gates of the same kind line up in columns. `"asap"`: as close to the inputs as possible.],
   `sweeps`, `4`, [Placement refinement passes. `0` keeps the inputs evenly stacked.],
-  `snap`, `0.4`, [How far a gate may move to make an almost-straight wire straight.],
+  `snap`, `2`, [How far a group of gates may move to make a bent wire straight.],
   `input-sep`, `1.0`, [Minimum vertical distance between inputs.],
   `gate-sep`, `0.6`, [Minimum free space between stacked gates.],
   `wire-sep`, `0.45`, [Minimum spacing of wires passing through a column.],
@@ -257,14 +257,19 @@ The automatic layout is a layered ("Sugiyama-style") graph drawing:
   column just before its first consumer; outputs share the last column.
 + *Dummies.* A wire that skips columns gets a pass-through node in each
   column it crosses, so gates are never placed on top of it.
-+ *Placement.* Each column is solved as an order-preserving least-squares
-  problem (every node wants to sit at the mean height of its drivers and
-  consumers, subject to minimum spacing), with alternating forward and
-  backward sweeps. A final pass snaps nodes so that almost-straight wires
-  become straight.
-+ *Routing.* Wires are orthogonal. Each bending net gets its own vertical
-  track between two columns, ordered to avoid crossings where possible.
-  Junction dots mark every point where three or more wire segments meet.
++ *Placement.* Each column is solved as an order-preserving L1 problem: every
+  node sits at the weighted _median_ of the heights that would make its wires
+  straight (subject to minimum spacing), with alternating forward and
+  backward sweeps. A median lands exactly on one of those heights, so most
+  wires come out perfectly straight; long wires weigh more.
++ *Straightening.* Nodes joined by straight wires form rigid groups. A group
+  is moved up or down whenever that straightens another wire without
+  breaking spacing or pin order.
++ *Routing.* Wires are orthogonal. In the gap between two columns, bending
+  nets get vertical tracks whose order minimises crossings and never lets
+  two wires overlap. Nets that bend over separate stretches share a track,
+  so they turn at the same point. Junction dots mark every point where three
+  or more wire segments meet.
 
 The result is deterministic but heuristic: reordering the `in` line is the
 quickest way to untangle a circuit.

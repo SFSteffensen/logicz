@@ -35,7 +35,7 @@
   min-gap: 0.9, // minimum horizontal gap between layers
   dot: 0.065, // junction dot radius
   layering: "alap", // "alap": gates next to their consumers, "asap": next to their inputs
-  snap: 0.4, // max shift to make an almost-straight wire straight
+  snap: 2, // max distance a group of gates may move to straighten a wire
   sweeps: 4, // placement refinement passes (0 = inputs stay stacked)
   extra: none,
 ) = {
@@ -80,12 +80,12 @@
         let x-start = X.at(L) + W.at(L)
         for (s, net) in gap.nets {
           let sx = out-x(s)
-          let k = gap.order.position(o => o == s)
+          let k = gap.track.at(s, default: none)
           if k == none {
             line(P(sx, net.y), P(x-end, net.y))
             continue
           }
-          let tx = x-start + (k + 1) * gap.width / (gap.order.len() + 1)
+          let tx = x-start + (k + 1) * gap.width / (gap.ntracks + 1)
           let ys = (net.y, ..net.ts)
           let (y0, y1) = (calc.min(..ys), calc.max(..ys))
           line(P(sx, net.y), P(tx, net.y))
