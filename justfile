@@ -54,7 +54,7 @@ docs-watch:
 
 # render the README images
 images:
-    for f in docs/examples/*.typ; do typst compile --root . "$f" "${f%.typ}.png" --ppi 200; done
+    for f in docs/examples/*.typ; do typst compile --root . "$f" "${f%.typ}.svg"; done
 
 # symlink this checkout as @local/logicz:{{version}}
 install:

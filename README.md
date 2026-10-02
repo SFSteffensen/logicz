@@ -18,7 +18,7 @@ cout = or(and(a, b), and(p, cin))
 ```)
 ````
 
-![A full adder](docs/examples/full-adder.png)
+![A full adder](docs/examples/full-adder.svg)
 
 ````typ
 #logic(```
@@ -28,7 +28,7 @@ z = or(and(a, b), and(not(b), c), and(b, not(c)))
 ```)
 ````
 
-![Two sum-of-products circuits sharing inputs](docs/examples/sop.png)
+![Two sum-of-products circuits sharing inputs](docs/examples/sop.svg)
 
 ## Features
 
@@ -40,7 +40,7 @@ z = or(and(a, b), and(not(b), c), and(b, not(c)))
 - `gate()` for placing gates by hand in any CeTZ canvas, with anchors
   `in1`..`inN` and `out`; `gate-symbol()` for gates inline in text or tables.
 
-![All gates](docs/examples/gates.png)
+![All gates](docs/examples/gates.svg)
 
 ## Netlist syntax
 
