@@ -24,10 +24,10 @@
 /// Geometry of a gate with `n` inputs. Pin offsets are y-up relative to the
 /// gate centre, top pin first; x is measured from the input pin ends.
 #let gate-geometry(kind, n) = {
-  assert(kind in GATES, message: "circuitz: unknown gate '" + kind + "' (known: " + GATES.keys().join(", ") + ")")
+  assert(kind in GATES, message: "logicz: unknown gate '" + kind + "' (known: " + GATES.keys().join(", ") + ")")
   let k = GATES.at(kind)
-  if k.shape == "tri" { assert(n == 1, message: "circuitz: " + kind + " takes exactly one input") }
-  assert(n >= 1, message: "circuitz: " + kind + " needs at least one input")
+  if k.shape == "tri" { assert(n == 1, message: "logicz: " + kind + " takes exactly one input") }
+  assert(n >= 1, message: "logicz: " + kind + " needs at least one input")
   let pitch = if n <= 2 { 0.5 } else if n == 3 { 1 / 3 } else { 0.28 }
   let pins = range(n).map(i => ((n - 1) / 2 - i) * pitch)
   let half = if k.shape == "tri" { 0.35 } else { 0.5 }

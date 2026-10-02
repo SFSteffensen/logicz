@@ -1,12 +1,12 @@
 [package]
-name = "circuitz"
+name = "logicz"
 version = "0.1.1"
 compiler = "0.14.0"
 entrypoint = "src/exports.typ"
 authors = ["Sebastian Steffensen"]
 license = "MIT"
 description = "Logic gate circuit diagrams from a tiny netlist language, drawn with CeTZ."
-repository = "https://github.com/SFSteffensen/circuitz"
+repository = "https://github.com/SFSteffensen/logicz"
 categories = ["visualization", "components"]
 disciplines = ["computer-science", "engineering", "electrical-engineering"]
 keywords = [

@@ -1,4 +1,4 @@
-// circuitz: gate-level logic circuit diagrams for Typst, drawn with CeTZ.
+// logicz: gate-level logic circuit diagrams for Typst, drawn with CeTZ.
 
 #import "@preview/cetz:0.5.2"
 #import "geometry.typ": GATES

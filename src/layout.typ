@@ -29,7 +29,7 @@
   while changed {
     changed = false
     rounds += 1
-    assert(rounds <= gates.len() + 2, message: "circuitz: combinational loop detected")
+    assert(rounds <= gates.len() + 2, message: "logicz: combinational loop detected")
     for (g, gate) in gates {
       let l = 1 + calc.max(..gate.ins.map(p => level.at(p.src)))
       if l != level.at(g) { level.insert(g, l); changed = true }
