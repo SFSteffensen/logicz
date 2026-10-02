@@ -4,6 +4,9 @@
 
 ### Changed
 
+- Renamed the package from `circuitz` to `logicz`, so it isn't mistaken for
+  an electrical-circuit package or for LaTeX's CircuiTikZ. Import it as
+  `@preview/logicz`. Error messages now start with `logicz:`.
 - Much cleaner automatic layout in `logic()`:
   - Gates are placed so that most wires are perfectly straight, which
     removes the small jogs before gate inputs.

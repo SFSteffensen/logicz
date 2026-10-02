@@ -15,21 +15,21 @@
 #let tokenize(line) = {
   let toks = line.matches(regex(ident + "|[(),!~=]|\S")).map(m => m.text)
   let bad = toks.filter(t => t.match(regex("^(" + ident + "|[(),!~=])$")) == none)
-  assert(bad.len() == 0, message: "circuitz: unexpected '" + bad.join() + "' in: " + line)
+  assert(bad.len() == 0, message: "logicz: unexpected '" + bad.join() + "' in: " + line)
   toks
 }
 
 // expr := {'!' | '~'} ( ident | ident '(' expr {',' expr} ')' )
 #let parse-expr(toks, i) = {
-  assert(i < toks.len(), message: "circuitz: unexpected end of line")
+  assert(i < toks.len(), message: "logicz: unexpected end of line")
   let inv = false
   while toks.at(i) in ("!", "~") {
     inv = not inv
     i += 1
-    assert(i < toks.len(), message: "circuitz: unexpected end of line after '!'")
+    assert(i < toks.len(), message: "logicz: unexpected end of line after '!'")
   }
   let id = toks.at(i)
-  assert(id.match(regex("^" + ident + "$")) != none, message: "circuitz: expected a name but got '" + id + "'")
+  assert(id.match(regex("^" + ident + "$")) != none, message: "logicz: expected a name but got '" + id + "'")
   i += 1
   if i < toks.len() and toks.at(i) == "(" {
     i += 1
@@ -38,9 +38,9 @@
       let (e, j) = parse-expr(toks, i)
       args.push(e)
       i = j
-      assert(i < toks.len(), message: "circuitz: missing ')' after " + id)
+      assert(i < toks.len(), message: "logicz: missing ')' after " + id)
       if toks.at(i) == ")" { i += 1; break }
-      assert(toks.at(i) == ",", message: "circuitz: expected ',' or ')' but got '" + toks.at(i) + "'")
+      assert(toks.at(i) == ",", message: "logicz: expected ',' or ')' but got '" + toks.at(i) + "'")
       i += 1
       if i < toks.len() and toks.at(i) == ")" { i += 1; break } // trailing comma
     }
@@ -56,7 +56,7 @@
     st.refs.push(e.ref)
     return ((src: e.ref, inv: e.inv), st)
   }
-  assert(e.call in GATES, message: "circuitz: unknown gate '" + e.call + "' (known: " + GATES.keys().join(", ") + ")")
+  assert(e.call in GATES, message: "logicz: unknown gate '" + e.call + "' (known: " + GATES.keys().join(", ") + ")")
   let ins = ()
   for a in e.args {
     let (p, s) = lower-expr(a, st)
@@ -64,7 +64,7 @@
     ins.push(p)
   }
   if GATES.at(e.call).shape == "tri" {
-    assert(ins.len() == 1, message: "circuitz: " + e.call + "() takes exactly one input")
+    assert(ins.len() == 1, message: "logicz: " + e.call + "() takes exactly one input")
   }
   let pin-key(p) = (if p.inv { "!" } else { "" }) + p.src
   let key = e.call + "(" + ins.map(pin-key).sorted().join(",") + ")"
@@ -100,7 +100,7 @@
       pending = ""
     }
   }
-  assert(pending.trim() == "", message: "circuitz: missing ')' in: " + pending.trim())
+  assert(pending.trim() == "", message: "logicz: missing ')' in: " + pending.trim())
   for line in stmts {
     let toks = tokenize(line)
     if toks.first() in ("in", "inputs") {
@@ -109,13 +109,13 @@
       outs = toks.slice(1).filter(t => t != ",")
     } else {
       assert(toks.len() >= 3 and toks.at(1) == "=",
-        message: "circuitz: expected `name = gate(...)` but got: " + line)
+        message: "logicz: expected `name = gate(...)` but got: " + line)
       let name = toks.first()
-      assert(name not in st.gates, message: "circuitz: '" + name + "' is defined twice")
+      assert(name not in st.gates, message: "logicz: '" + name + "' is defined twice")
       let (e, j) = parse-expr(toks, 2)
-      assert(j == toks.len(), message: "circuitz: trailing tokens in: " + line)
+      assert(j == toks.len(), message: "logicz: trailing tokens in: " + line)
       assert("call" in e and not e.inv,
-        message: "circuitz: right-hand side must be a gate call, e.g. `" + name + " = buf(x)`")
+        message: "logicz: right-hand side must be a gate call, e.g. `" + name + " = buf(x)`")
       let (_, s) = lower-expr(e, st, name: name)
       st = s
     }
@@ -123,7 +123,7 @@
   let gates = st.gates
   // primary inputs: declared order first, then order of appearance
   let inputs = if ins == none { () } else { ins }
-  for i in inputs { assert(i not in gates, message: "circuitz: '" + i + "' is declared as an input but also assigned") }
+  for i in inputs { assert(i not in gates, message: "logicz: '" + i + "' is declared as an input but also assigned") }
   for r in st.refs {
     if r not in gates and r not in inputs { inputs.push(r) }
   }
@@ -131,6 +131,6 @@
   if outs == none {
     outs = gates.keys().filter(g => not g.starts-with("_g") and g not in used)
   }
-  for o in outs { assert(o in gates or o in inputs, message: "circuitz: unknown output '" + o + "'") }
+  for o in outs { assert(o in gates or o in inputs, message: "logicz: unknown output '" + o + "'") }
   (gates: gates, inputs: inputs, outputs: outs)
 }

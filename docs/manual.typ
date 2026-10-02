@@ -1,4 +1,4 @@
-#import "/src/exports.typ" as circuitz: logic, gate, gate-symbol, cetz, GATES
+#import "/src/exports.typ" as logicz: logic, gate, gate-symbol, cetz, GATES
 
 #let VERSION = toml("/typst.toml").package.version
 
@@ -22,7 +22,7 @@
 
 #align(center)[
   #v(2cm)
-  #text(2.6em, `circuitz`) \
+  #text(2.6em, `logicz`) \
   #v(0.5em)
   _Gate-level logic circuit diagrams for Typst_ \
   #v(1em)
@@ -43,7 +43,7 @@
 
 = Introduction
 
-`circuitz` draws digital logic circuits with the _distinctive-shape_ gate
+`logicz` draws digital logic circuits with the _distinctive-shape_ gate
 symbols of IEEE Std 91/91a-1991, on top of
 #link("https://cetz-package.github.io")[CeTZ]. It has two layers:
 
@@ -53,7 +53,7 @@ symbols of IEEE Std 91/91a-1991, on top of
   placing gates by hand.
 
 ```typ
-#import "@preview/circuitz:0.1.0": logic, gate, gate-symbol
+#import "@preview/logicz:0.1.1": logic, gate, gate-symbol
 ```
 
 = The netlist language
@@ -131,7 +131,7 @@ $x_1$); longer names stay plain text. Turn this off with `math-labels: false`.
 
 == Errors
 
-Mistakes are reported with a `circuitz:` message: unknown gates, unbalanced
+Mistakes are reported with a `logicz:` message: unknown gates, unbalanced
 parentheses, names defined twice, `not` with two inputs, unknown outputs and
 feedback loops. Circuits with feedback (latches, flip-flops) cannot be laid
 out automatically; draw them by hand with `gate()` (@manual).

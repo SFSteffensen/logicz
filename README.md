@@ -1,4 +1,4 @@
-# circuitz
+# logicz
 
 Gate-level logic circuit diagrams for [Typst](https://typst.app), drawn with
 [CeTZ](https://github.com/cetz-package/cetz). Gates use the IEEE Std 91/91a-1991
@@ -8,7 +8,7 @@ Write the netlist, get the schematic: gates, wires, junction dots and labels
 are laid out automatically, like Mermaid or D2 but for logic gates.
 
 ````typ
-#import "@preview/circuitz:0.1.0": logic
+#import "@preview/logicz:0.1.1": logic
 
 #logic(```
 in a b cin
@@ -68,7 +68,7 @@ Requires [just](https://github.com/casey/just).
 just test      # compile tests/*.typ, check tests/fail/*.typ fail as expected
 just docs      # build docs/manual.pdf
 just images    # render the README images
-just install   # symlink as @local/circuitz:<version>
+just install   # symlink as @local/logicz:<version>
 ```
 
 ## License

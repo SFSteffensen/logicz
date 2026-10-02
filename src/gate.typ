@@ -16,7 +16,7 @@
 #let gate(kind, pos, inputs: auto, inverted: (), name: none, stroke: 0.8pt, wire: 0.6pt, fill: white) = {
   let (body-stroke, body-fill) = (stroke, fill) // cetz.draw exports fill() and stroke()
   import cetz.draw: *
-  assert(kind in GATES, message: "circuitz: unknown gate '" + kind + "' (known: " + GATES.keys().join(", ") + ")")
+  assert(kind in GATES, message: "logicz: unknown gate '" + kind + "' (known: " + GATES.keys().join(", ") + ")")
   let n = if inputs == auto { default-inputs(kind) } else { inputs }
   let g = gate-geometry(kind, n)
   let (x0, tip, h) = (g.x0, g.tip, g.half)
